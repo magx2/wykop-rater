@@ -1,6 +1,5 @@
 package pl.grzeslowski.wykop.scrapper.html;
 
-import com.google.common.base.Preconditions;
 import org.jsoup.nodes.Document;
 
 import java.util.stream.Stream;
@@ -40,6 +39,12 @@ public class Html {
 
         public boolean hasAttribute(String attribute) {
             return element.hasAttr(attribute);
+        }
+
+        public Stream<Element> select(String cssSelector) {
+            return element.select(cssSelector)
+                    .stream()
+                    .map(Element::new);
         }
     }
 }

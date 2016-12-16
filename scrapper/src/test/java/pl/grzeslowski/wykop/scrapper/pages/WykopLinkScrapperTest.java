@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import pl.grzeslowski.wykop.scrapper.TestUtils;
 import pl.grzeslowski.wykop.scrapper.html.Html;
 
 import java.io.File;
@@ -25,23 +26,13 @@ public class WykopLinkScrapperTest {
     @Test
     public void shouldScrapData() throws IOException {
         // given
-        final Html html = new Html(Jsoup.parse(pageToScrap(), "UTF-8"));
+        final File mainPage = TestUtils.loadFileFromClassLoader("WykopMainPageToScrapLinks.html");
+        final Html html = new Html(Jsoup.parse(mainPage, "UTF-8"));
 
         // when
         final List<Link> links = wykopLinkScrapper.scrapLinks(html).collect(toList());
 
         // then
         assertThat(links).hasSize(59); // niby ma byc 54 ale jakos jest 59...
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private File pageToScrap() {
-        final String path = this.getClass()
-                .getClassLoader()
-                .getResource("WykopMainPageToScrapLinks.html")
-                .getFile();
-        final File file = new File(path);
-        Preconditions.checkArgument(file.exists());
-        return file;
     }
 }
