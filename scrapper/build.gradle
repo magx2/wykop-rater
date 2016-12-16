@@ -5,6 +5,7 @@ buildscript {
 	repositories {
 		mavenCentral()
 	}
+	//noinspection GroovyAssignabilityCheck
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
@@ -14,6 +15,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
+//noinspection GroovyAssignabilityCheck
 jar {
 	baseName = 'scrapper'
 	version = '0.0.1-SNAPSHOT'
@@ -25,8 +27,11 @@ repositories {
 	mavenCentral()
 }
 
-
+//noinspection GroovyAssignabilityCheck
 dependencies {
+	compile group: 'com.google.guava', name: 'guava', version: '19.0'
 	compile('org.springframework.boot:spring-boot-starter')
+
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile group: 'org.easytesting', name: 'fest-assert', version: '1.4'
 }
