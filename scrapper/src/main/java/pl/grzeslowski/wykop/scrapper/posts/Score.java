@@ -13,6 +13,14 @@ public final class Score {
         this.downVotes = downVotes;
     }
 
+    public int getUpVotes() {
+        return upVotes;
+    }
+
+    public int getDownVotes() {
+        return downVotes;
+    }
+
     public int calculateScore() {
         return upVotes - downVotes;
     }

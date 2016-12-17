@@ -1,24 +1,27 @@
 package pl.grzeslowski.wykop.scrapper.posts;
 
+import com.google.common.base.Preconditions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.grzeslowski.wykop.scrapper.html.Html;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.abs;
-import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
 @Service
 class WykopPostReader implements PostReader {
-    private static final SimpleDateFormat POST_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+private final DateParser dateParser;
+
+    @Autowired
+    public WykopPostReader(DateParser dateParser) {
+        this.dateParser = Preconditions.checkNotNull(dateParser);
+    }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private static class ParentElemMainPost {
@@ -79,7 +82,7 @@ class WykopPostReader implements PostReader {
         return element.select("time")
                 .findFirst()
                 .map(e -> e.attribute("datetime"))
-                .map(parseDate())
+                .map(dateParser::parse)
                 .orElseThrow(() -> new IllegalStateException("Could not parse date!"));
     }
 
@@ -96,16 +99,6 @@ class WykopPostReader implements PostReader {
                 .map(Html.Element::text)
                 .orElseThrow(() -> new IllegalStateException("Could not parse content!"));
 
-    }
-
-    private Function<String, Date> parseDate() {
-        return date -> {
-            try {
-                return POST_DATE_FORMAT.parse(date);
-            } catch (ParseException e) {
-                throw new RuntimeException(format("Cannot parse %s!", date), e);
-            }
-        };
     }
 
     private Score parseScoreDirectly(Html.Element element) {
