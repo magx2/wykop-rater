@@ -1,2 +1,5 @@
 fileCrud:
   basePath: 'D:\Programowanie\deep_learning\wykop\posts'
+pageToStart: 'http://www.wykop.pl/strona/10/' # always start from page 10 to get posts that were already rated
+jsoup:
+  waitAfterSocketTimeoutException: 60 # sec
