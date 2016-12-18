@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/magx2/wykop-rater.svg?branch=master)](https://travis-ci.org/magx2/wykop-rater)
