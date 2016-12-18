@@ -1,6 +1,7 @@
 package pl.grzeslowski.wykop.scrapper.posts;
 
 import org.jsoup.Jsoup;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,30 @@ public class WykopSiteReaderTest {
         final Score wykop = site.getWykop();
         assertThat(wykop.getUpVotes()).isEqualTo(2732);
         assertThat(wykop.getDownVotes()).isEqualTo(31);
+    }
+
+    @Ignore("I don't know how to parse score from this type of site." +
+            "Also the question is why this is downloaded? If you go to link that was scrapped," +
+            "you will get different page.")
+    @Test
+    public void shouldParseWykopSiteThatCausesProblems() throws IOException, ParseException {
+
+        // given
+        final File postPage = TestUtils.loadFileFromClassLoader("WykopHtmlWithSite.html");
+        final Html html = new Html(Jsoup.parse(postPage, "UTF-8"));
+
+        // when
+        final Site site = siteReader.parse(html);
+
+        // then
+        assertThat(site.getId().getId()).isEqualTo(3493983);
+        assertThat(site.isHot()).isFalse();
+        assertThat(site.getAdded()).isEqualTo(postDate.parse("2016-12-09T11:06:54+01:00"));
+        assertThat(site.getAuthor()).isEqualTo("RzeczpospolitaPRAWO");
+        assertThat(site.getPosts()).isNotEmpty();
+
+        final Score wykop = site.getWykop();
+        assertThat(wykop.getUpVotes()).isEqualTo(543);
+        assertThat(wykop.getDownVotes()).isEqualTo(2);
     }
 }
