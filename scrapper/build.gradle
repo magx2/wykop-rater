@@ -38,3 +38,10 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile group: 'org.easytesting', name: 'fest-assert', version: '1.4'
 }
+
+test {
+	testLogging {
+		events "failed"
+		exceptionFormat "short"
+	}
+}
