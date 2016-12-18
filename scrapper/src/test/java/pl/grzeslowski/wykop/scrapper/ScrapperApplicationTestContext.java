@@ -14,11 +14,10 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 })
 @EnableAutoConfiguration
 public class ScrapperApplicationTestContext {
-    static class JsonCrudAssignableTypeFilter extends AssignableTypeFilter  {
-        private  JsonCrudAssignableTypeFilter() throws ClassNotFoundException {
+    static class JsonCrudAssignableTypeFilter extends AssignableTypeFilter {
+        private JsonCrudAssignableTypeFilter() throws ClassNotFoundException {
             super(Class.forName("pl.grzeslowski.wykop.scrapper.io.JsonCrud"));
         }
-
     }
 }
 
