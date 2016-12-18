@@ -42,7 +42,7 @@ class JsonCrud implements SiteCrud{
     }
 
     private File createFileToSave(Id id) {
-        return new File(basePath.getAbsolutePath() + File.pathSeparator + createFileName(id));
+        return new File(basePath.getAbsolutePath() + File.separator + createFileName(id));
     }
 
     private String createFileName(Id id) {
