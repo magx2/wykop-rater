@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pl.grzeslowski.wykop.scrapper.posts.Id;
-import pl.grzeslowski.wykop.scrapper.posts.Site;
+import pl.grzeslowski.wykop.posts.Id;
+import pl.grzeslowski.wykop.posts.Site;
 
 import java.io.File;
 import java.io.IOException;

@@ -9,13 +9,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import pl.grzeslowski.wykop.posts.Site;
 import pl.grzeslowski.wykop.scrapper.html.Html;
 import pl.grzeslowski.wykop.scrapper.html.HtmlDownloader;
 import pl.grzeslowski.wykop.scrapper.io.SiteCrud;
 import pl.grzeslowski.wykop.scrapper.pages.Link;
 import pl.grzeslowski.wykop.scrapper.pages.LinkScrapper;
 import pl.grzeslowski.wykop.scrapper.pages.PageIterator;
-import pl.grzeslowski.wykop.scrapper.posts.Site;
 import pl.grzeslowski.wykop.scrapper.posts.SiteReader;
 
 import java.util.Optional;

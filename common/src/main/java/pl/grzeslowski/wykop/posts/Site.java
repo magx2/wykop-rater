@@ -1,4 +1,4 @@
-package pl.grzeslowski.wykop.scrapper.posts;
+package pl.grzeslowski.wykop.posts;
 
 import com.google.common.base.Preconditions;
 

@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import pl.grzeslowski.wykop.posts.Score;
+import pl.grzeslowski.wykop.posts.Site;
 import pl.grzeslowski.wykop.scrapper.ScrapperApplicationTestContext;
 import pl.grzeslowski.wykop.scrapper.TestUtils;
 import pl.grzeslowski.wykop.scrapper.html.Html;

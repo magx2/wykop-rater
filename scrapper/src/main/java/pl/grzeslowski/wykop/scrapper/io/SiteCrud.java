@@ -1,7 +1,8 @@
 package pl.grzeslowski.wykop.scrapper.io;
 
-import pl.grzeslowski.wykop.scrapper.posts.Id;
-import pl.grzeslowski.wykop.scrapper.posts.Site;
+
+import pl.grzeslowski.wykop.posts.Id;
+import pl.grzeslowski.wykop.posts.Site;
 
 public interface SiteCrud {
     void save(Site site);

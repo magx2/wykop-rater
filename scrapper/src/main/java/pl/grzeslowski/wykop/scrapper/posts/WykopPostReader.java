@@ -3,6 +3,8 @@ package pl.grzeslowski.wykop.scrapper.posts;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.grzeslowski.wykop.posts.Post;
+import pl.grzeslowski.wykop.posts.Score;
 import pl.grzeslowski.wykop.scrapper.html.Html;
 
 import java.util.Date;

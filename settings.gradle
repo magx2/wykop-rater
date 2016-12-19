@@ -2,3 +2,4 @@ rootProject.name = 'root'
 
 include "scrapper"
 include "wykop-post-classifier"
+include 'common'
