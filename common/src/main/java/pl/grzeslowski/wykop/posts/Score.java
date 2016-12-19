@@ -1,12 +1,16 @@
 package pl.grzeslowski.wykop.posts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Score {
     private final int upVotes;
     private final int downVotes;
 
-    public Score(int upVotes, int downVotes) {
+    public Score(@JsonProperty("upVotes") int upVotes, @JsonProperty("downVotes") int downVotes) {
         Preconditions.checkArgument(upVotes >= 0, "upVotes == " + upVotes);
         Preconditions.checkArgument(downVotes >= 0, "downVotes == " + downVotes);
         this.upVotes = upVotes;
@@ -25,14 +29,17 @@ public final class Score {
         return upVotes - downVotes;
     }
 
+    @JsonIgnore
     public boolean isPositive() {
         return calculateScore() > 0;
     }
 
+    @JsonIgnore
     public boolean isNegative() {
         return calculateScore() < 0;
     }
 
+    @JsonIgnore
     public boolean isNeutral() {
         return calculateScore() == 0;
     }

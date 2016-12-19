@@ -1,5 +1,6 @@
 package pl.grzeslowski.wykop.posts;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 
 import java.util.Date;
@@ -14,8 +15,9 @@ public class Site {
     private final String content;
     private final List<Post> posts;
 
-    public Site(Id id, boolean hot, Score wykop, Date added, String author, String content,
-                List<Post> posts) {
+    public Site(@JsonProperty("id") Id id, @JsonProperty("hot") boolean hot, @JsonProperty("wykop") Score wykop,
+                @JsonProperty("added") Date added, @JsonProperty("author") String author, @JsonProperty("content") String content,
+                @JsonProperty("posts") List<Post> posts) {
         this.id = Preconditions.checkNotNull(id);
         this.hot = hot;
         this.wykop = Preconditions.checkNotNull(wykop);

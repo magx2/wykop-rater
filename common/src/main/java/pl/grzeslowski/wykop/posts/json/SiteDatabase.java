@@ -1,5 +1,7 @@
 package pl.grzeslowski.wykop.posts.json;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import pl.grzeslowski.wykop.posts.Id;
@@ -14,7 +16,14 @@ import static java.lang.String.format;
 
 public class SiteDatabase {
     private static final String EXTENSION = ".json";
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
+
+    public SiteDatabase() {
+        mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.SETTER, JsonAutoDetect.Visibility.NONE);
+        mapper.setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE);
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+    }
 
     public void write(File directory, Site site) {
         Preconditions.checkArgument(directory.exists());
