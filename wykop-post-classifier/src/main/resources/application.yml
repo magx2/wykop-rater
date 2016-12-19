@@ -10,3 +10,6 @@ word2vec:
     pathToWordVectors: 'D:\Programowanie\deep_learning\wykop\wykop-post-clasifier/wordVectors.txt'
 wykop:
   postsDir: 'D:\Programowanie\deep_learning\wykop\posts'
+test:
+  batchSize: 50
+  maxWordsInPost: 50
