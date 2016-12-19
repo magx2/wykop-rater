@@ -15,6 +15,7 @@ import pl.grzeslowski.wykop.posts.Post;
 import pl.grzeslowski.wykop.posts.Score;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ import static java.util.Arrays.stream;
 
 class PostDataSetIterator implements DataSetIterator {
     private static final Logger log = LoggerFactory.getLogger(PostDataSetIterator.class);
-    public static final int LABELS_SIZE = 3;
+    private static final int LABELS_SIZE = 3;
     private final Iterator<Post> iterator;
     private final Word2Vec word2Vec;
     private final int batchSize;
@@ -70,11 +71,11 @@ class PostDataSetIterator implements DataSetIterator {
                 .map(p -> new PostVectorizedContent(p.post, trimLengthOfVector(p.vectorizedContent)))
                 .collect(Collectors.toList());
 
-        final INDArray features = Nd4j.zeros(toProcess.size(), layerSize, maxLength);
-        final INDArray labels = Nd4j.zeros(toProcess.size(), LABELS_SIZE, maxLength);
+        final INDArray features = Nd4j.zeros(trimmedLengthVectors.size(), layerSize, maxLength);
+        final INDArray labels = Nd4j.zeros(trimmedLengthVectors.size(), LABELS_SIZE, maxLength);
 
-        INDArray featuresMask = Nd4j.zeros(toProcess.size(), maxLength);
-        INDArray labelsMask = Nd4j.zeros(toProcess.size(), maxLength);
+        INDArray featuresMask = Nd4j.zeros(trimmedLengthVectors.size(), maxLength);
+        INDArray labelsMask = Nd4j.zeros(trimmedLengthVectors.size(), maxLength);
 
         int[] temp = new int[2];
         for (int i = 0; i < trimmedLengthVectors.size(); i++) {
@@ -188,7 +189,7 @@ class PostDataSetIterator implements DataSetIterator {
 
     @Override
     public List<String> getLabels() {
-        return null;
+        return Arrays.asList("Positive", "Neutral", "Negative");
     }
 
     @Override
