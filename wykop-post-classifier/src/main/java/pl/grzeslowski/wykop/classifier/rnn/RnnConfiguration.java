@@ -69,4 +69,9 @@ class RnnConfiguration {
 
         return new MultiLayerNetwork(conf);
     }
+
+    @Bean
+    RnnProperties rnnProperties() {
+        return new RnnProperties(iterations, regularization, learningRate, l2, gradientNormalizationThreshold);
+    }
 }

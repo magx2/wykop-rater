@@ -6,8 +6,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import pl.grzeslowski.wykop.classifier.test.Trainer;
+import pl.grzeslowski.wykop.json.JsonConfiguration;
 
-@ComponentScan(basePackageClasses = WykopPostClassifierApplication.class)
+@ComponentScan(basePackageClasses = {WykopPostClassifierApplication.class, JsonConfiguration.class})
 @SpringBootApplication
 public class WykopPostClassifierApplication implements CommandLineRunner {
 

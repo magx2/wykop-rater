@@ -11,18 +11,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.grzeslowski.wykop.classifier.data.DataProvider;
+import pl.grzeslowski.wykop.classifier.io.EpochResultSaver;
 import pl.grzeslowski.wykop.classifier.io.MultiLayerNetworkSaver;
+import pl.grzeslowski.wykop.classifier.rnn.RnnProperties;
 
 import javax.inject.Provider;
+import java.io.File;
+import java.util.stream.IntStream;
 
 @Service
 class TrainerImpl implements Trainer {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(TrainerImpl.class);
 
     private final Provider<MultiLayerNetwork> modelProvider;
-    private MultiLayerNetworkSaver networkSaver;
+    private final MultiLayerNetworkSaver networkSaver;
     private final DataProvider dataProvider;
-    private IterationListener[] iterationListenerList;
+    private final EpochResultSaver epochResultSaver;
+    private final IterationListener[] iterationListenerList;
+    private final RnnProperties rnnProperties;
 
     @Value("${rnn.maxWordsInDialog}")
     private int maxWordsInDialog;
@@ -35,15 +41,20 @@ class TrainerImpl implements Trainer {
     @Value("${word2vec.hyper.layerSize}")
     private int layerSize;
 
+
     @Autowired
     public TrainerImpl(Provider<MultiLayerNetwork> modelProvider,
                        MultiLayerNetworkSaver networkSaver,
                        DataProvider dataProvider,
-                       IterationListener[] iterationListenerList) {
+                       EpochResultSaver epochResultSaver,
+                       IterationListener[] iterationListenerList,
+                       RnnProperties rnnProperties) {
         this.modelProvider = modelProvider;
         this.networkSaver = networkSaver;
         this.dataProvider = dataProvider;
+        this.epochResultSaver = epochResultSaver;
         this.iterationListenerList = iterationListenerList;
+        this.rnnProperties = rnnProperties;
     }
 
     @Override
@@ -54,31 +65,38 @@ class TrainerImpl implements Trainer {
         net.init();
         net.setListeners(iterationListenerList);
 
-        for (int epoch = 0; epoch < epochs; epoch++) {
-            final DataSetIterator train = dataProvider.newTrainData();
-            final DataSetIterator test = dataProvider.newTestData();
-
-            log.info("Starting learning, epoch {}", epoch + 1);
-            net.fit(train);
-
-            networkSaver.save(net);
-
-            log.info("Starting evaluation:");
-
-            Evaluation evaluation = new Evaluation();
-            while (test.hasNext()) {
-                DataSet t = test.next();
-                INDArray features = t.getFeatures();
-                INDArray labels = t.getLabels();
-                INDArray inMask = t.getFeaturesMaskArray();
-                INDArray outMask = t.getLabelsMaskArray();
-                INDArray predicted = net.output(features, false, inMask, outMask);
-
-                evaluation.evalTimeSeries(labels, predicted, outMask);
-            }
-            log.info("Evaluation output:\n{}", evaluation.stats(suppressWarnings));
-        }
+        IntStream.range(1, epochs + 1)
+                .mapToObj(epoch -> trainAndTestEpoch(net, epoch))
+                .reduce((a, b) -> b)
+                .ifPresent(epochResultSaver::save);
 
         return net;
+    }
+
+    private EpochResult trainAndTestEpoch(MultiLayerNetwork net, int epoch) {
+        final DataSetIterator train = dataProvider.newTrainData();
+        final DataSetIterator test = dataProvider.newTestData();
+
+        log.info("Starting learning, epoch {}", epoch);
+        net.fit(train);
+
+        final File modelFile = networkSaver.save(net);
+
+        log.info("Starting evaluation:");
+
+        Evaluation evaluation = new Evaluation();
+        while (test.hasNext()) {
+            DataSet t = test.next();
+            INDArray features = t.getFeatures();
+            INDArray labels = t.getLabels();
+            INDArray inMask = t.getFeaturesMaskArray();
+            INDArray outMask = t.getLabelsMaskArray();
+            INDArray predicted = net.output(features, false, inMask, outMask);
+
+            evaluation.evalTimeSeries(labels, predicted, outMask);
+        }
+        log.info("Evaluation output:\n{}", evaluation.stats(suppressWarnings));
+
+        return new EpochResult(epoch, new TestOutput(evaluation), rnnProperties, modelFile);
     }
 }

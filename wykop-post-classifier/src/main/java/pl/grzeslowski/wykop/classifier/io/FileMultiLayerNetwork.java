@@ -20,10 +20,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Service
 class FileMultiLayerNetwork implements MultiLayerNetworkLoader, MultiLayerNetworkSaver {
     private static final Logger log = LoggerFactory.getLogger(FileMultiLayerNetwork.class);
-    private FileReader fileReader;
     private final File dirToSave;
     private final String modelPrefix;
     private final String modelSuffix;
+    private FileReader fileReader;
 
     @Autowired
     FileMultiLayerNetwork(FileReader fileReader,
@@ -39,12 +39,13 @@ class FileMultiLayerNetwork implements MultiLayerNetworkLoader, MultiLayerNetwor
     }
 
     @Override
-    public void save(MultiLayerNetwork model, Date date) {
+    public File save(MultiLayerNetwork model, Date date) {
         String fileName = String.format("%s%s%s", modelPrefix, date.getTime(), modelSuffix);
         File modelFile = createModelFile(fileName);
         try {
             log.info("Saving model {}", modelFile.getAbsoluteFile());
             ModelSerializer.writeModel(model, modelFile, true);
+            return modelFile;
         } catch (IOException e) {
             throw new UncheckedIOException("Cannot save model to file " + fileName + "!", e);
         }
