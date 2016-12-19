@@ -13,3 +13,16 @@ wykop:
 test:
   batchSize: 50
   maxWordsInPost: 50
+  epochs: 999999999
+rnn:
+  iterations: 1
+  maxWordsInDialog: 30
+  batchSize: 50
+  regularization: false
+  learningRate: 0.01
+  l2: 1e-5
+  gradientNormalizationThreshold: 1.0
+  layers:
+    l0:
+      nout: 200
+  pathToSaveModel: 'D:\Programowanie\deep_learning\wykop\wykop-post-clasifier/rnn-model.bin'
