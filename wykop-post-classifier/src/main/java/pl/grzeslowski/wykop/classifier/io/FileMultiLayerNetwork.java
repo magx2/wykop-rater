@@ -2,6 +2,8 @@ package pl.grzeslowski.wykop.classifier.io;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @Service
 class FileMultiLayerNetwork implements MultiLayerNetworkLoader, MultiLayerNetworkSaver {
+    private static final Logger log = LoggerFactory.getLogger(FileMultiLayerNetwork.class);
     private FileReader fileReader;
     private final File dirToSave;
     private final String modelPrefix;
@@ -40,6 +43,7 @@ class FileMultiLayerNetwork implements MultiLayerNetworkLoader, MultiLayerNetwor
         String fileName = String.format("%s%s%s", modelPrefix, date.getTime(), modelSuffix);
         File modelFile = createModelFile(fileName);
         try {
+            log.info("Saving model {}", modelFile.getAbsoluteFile());
             ModelSerializer.writeModel(model, modelFile, true);
         } catch (IOException e) {
             throw new UncheckedIOException("Cannot save model to file " + fileName + "!", e);
@@ -47,7 +51,7 @@ class FileMultiLayerNetwork implements MultiLayerNetworkLoader, MultiLayerNetwor
     }
 
     private File createModelFile(String fileName) {
-        return new File(dirToSave.getAbsolutePath() + File.pathSeparator + fileName);
+        return new File(dirToSave.getAbsolutePath() + File.separator + fileName);
     }
 
     @Override

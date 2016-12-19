@@ -26,10 +26,12 @@ class TrainerImpl implements Trainer {
 
     @Value("${rnn.maxWordsInDialog}")
     private int maxWordsInDialog;
-    @Value("${rnn.batchSize}")
+    @Value("${test.batchSize}")
     private int batchSize;
     @Value("${test.epochs}")
     private int epochs;
+    @Value("${test.suppressWarnings}")
+    private boolean suppressWarnings;
     @Value("${word2vec.hyper.layerSize}")
     private int layerSize;
 
@@ -56,10 +58,9 @@ class TrainerImpl implements Trainer {
             final DataSetIterator train = dataProvider.newTrainData();
             final DataSetIterator test = dataProvider.newTestData();
 
-            log.info("Starting learning, epoch {}", epoch);
+            log.info("Starting learning, epoch {}", epoch + 1);
             net.fit(train);
 
-            log.info("Saving model");
             networkSaver.save(net);
 
             log.info("Starting evaluation:");
@@ -75,7 +76,7 @@ class TrainerImpl implements Trainer {
 
                 evaluation.evalTimeSeries(labels, predicted, outMask);
             }
-            log.info("Evaluation output:\n{}", evaluation.stats(true));
+            log.info("Evaluation output:\n{}", evaluation.stats(suppressWarnings));
         }
 
         return net;
