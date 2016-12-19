@@ -16,6 +16,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -25,8 +27,13 @@ class FileReader implements IoService {
             .map(Charset::forName)
             .collect(toList());
 
-    @Value("${wykop.postsDir}")
-    private File postsDir;
+    private final File postsDir;
+
+    FileReader(@Value("${wykop.postsDir}") File postsDir) {
+        this.postsDir = checkNotNull(postsDir);
+        checkArgument(postsDir.exists());
+        checkArgument(postsDir.isDirectory());
+    }
 
     private Stream<String> readFile(Path path, Charset charset) {
         try (Stream<String> stream = Files.lines(path, charset)) {
