@@ -36,6 +36,7 @@ ext {
 //noinspection GroovyAssignabilityCheck
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
+	compile rootProject.project("common")
 
 	// DL4j
 	compile 'org.deeplearning4j:deeplearning4j-core:' + dl4jVersion

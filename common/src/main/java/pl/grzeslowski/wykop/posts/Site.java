@@ -45,6 +45,10 @@ public class Site {
         return author;
     }
 
+    public String getContent() {
+        return content;
+    }
+
     public List<Post> getPosts() {
         return posts;
     }

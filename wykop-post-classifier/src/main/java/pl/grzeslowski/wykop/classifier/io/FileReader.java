@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pl.grzeslowski.wykop.posts.Site;
+import pl.grzeslowski.wykop.posts.json.SiteDatabase;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,12 +29,18 @@ class FileReader implements IoService {
             .map(Charset::forName)
             .collect(toList());
 
+    private final SiteDatabase siteDatabase = new SiteDatabase();
     private final File postsDir;
 
     FileReader(@Value("${wykop.postsDir}") File postsDir) {
         this.postsDir = checkNotNull(postsDir);
         checkArgument(postsDir.exists());
         checkArgument(postsDir.isDirectory());
+    }
+
+    @Override
+    public Stream<Site> findAllSites() {
+        return findAllSiteFiles().map(siteDatabase::read);
     }
 
     private Stream<String> readFile(Path path, Charset charset) {
@@ -43,12 +51,11 @@ class FileReader implements IoService {
         }
     }
 
-    @Override
-    public Stream<Path> findAllPostsFiles() {
+    private Stream<Path> findAllSiteFiles() {
         return findAllFilesInDir(postsDir);
     }
 
-    public Optional<Stream<String>> readFile(Path path) {
+    private Optional<Stream<String>> readFile(Path path) {
         log.trace("Reading file {}.", path.toFile().getName());
         return charsets.stream()
                 .map(charset -> {
@@ -62,7 +69,7 @@ class FileReader implements IoService {
                 .findFirst();
     }
 
-    public Stream<Path> findAllFilesInDir(File dir) {
+    private Stream<Path> findAllFilesInDir(File dir) {
         try {
             return Files.walk(dir.toPath())
                     .filter(file -> Files.isRegularFile(file));

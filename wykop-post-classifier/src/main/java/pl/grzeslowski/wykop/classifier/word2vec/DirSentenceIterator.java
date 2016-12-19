@@ -3,20 +3,20 @@ package pl.grzeslowski.wykop.classifier.word2vec;
 import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
 import org.deeplearning4j.text.sentenceiterator.SentencePreProcessor;
 import pl.grzeslowski.wykop.classifier.io.IoService;
+import pl.grzeslowski.wykop.posts.Post;
+import pl.grzeslowski.wykop.posts.Site;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.util.Iterator;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 
 class DirSentenceIterator implements SentenceIterator {
     private final IoService ioService;
-    private Iterator<Path> iterator;
+    private Iterator<Site> iterator;
     private SentencePreProcessor preProcessor;
 
     DirSentenceIterator(IoService ioService) {
@@ -25,22 +25,20 @@ class DirSentenceIterator implements SentenceIterator {
     }
 
     private void initIterator() {
-        iterator = ioService.findAllPostsFiles().collect(Collectors.toSet()).iterator();
+        iterator = ioService.findAllSites().iterator();
     }
 
     @Override
     public String nextSentence() {
         checkArgument(hasNext(), "Iterator does not have next elem!");
-        final Path toRead = iterator.next();
-        final Optional<Stream<String>> stringStream = ioService.readFile(toRead);
-        if (!stringStream.isPresent()) {
-            return nextSentence();
-        } else {
-            return stringStream.get()
-                    .map(line -> line.replaceAll("\\{", " "))
-                    .map(line -> line.replaceAll("}", " "))
-                    .collect(Collectors.joining("\n"));
-        }
+        final Site site = iterator.next();
+        return format("%s %s %s", site.getAuthor(), site.getContent(), transformPostToString(site.getPosts()));
+    }
+
+    private String transformPostToString(List<Post> posts) {
+        return posts .stream()
+                .map(p -> format("%s %s %s", p.getAuthor(), p.getContent(), transformPostToString(p.getResponses())))
+                .collect(joining(" "));
     }
 
     @Override

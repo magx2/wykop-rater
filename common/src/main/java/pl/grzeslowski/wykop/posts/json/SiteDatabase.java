@@ -8,6 +8,7 @@ import pl.grzeslowski.wykop.posts.Site;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Path;
 
 import static java.lang.String.format;
 
@@ -24,6 +25,10 @@ public class SiteDatabase {
         } catch (IOException e) {
             throw new UncheckedIOException(format("Problem with saving to file %s!", toSave.getAbsolutePath()), e);
         }
+    }
+
+    public void write(Path directory, Site site) {
+        write(directory.toFile(), site);
     }
 
     public File createFileToSave(File directory, Id id) {
@@ -43,5 +48,9 @@ public class SiteDatabase {
         } catch (IOException e) {
             throw new UncheckedIOException(format("Problem with reading from file %s!", file.getAbsolutePath()), e);
         }
+    }
+
+    public Site read(Path path) {
+        return read(path.toFile());
     }
 }
