@@ -2,7 +2,7 @@ package pl.grzeslowski.wykop.classifier.word2vec;
 
 import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
 import org.deeplearning4j.text.sentenceiterator.SentencePreProcessor;
-import pl.grzeslowski.wykop.classifier.io.FileReader;
+import pl.grzeslowski.wykop.classifier.io.IoService;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -15,13 +15,13 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 class DirSentenceIterator implements SentenceIterator {
-    private final FileReader fileReader;
+    private final IoService ioService;
     private final File dir;
     private Iterator<Path> iterator;
     private SentencePreProcessor preProcessor;
 
-    DirSentenceIterator(FileReader fileReader, File dir) {
-        this.fileReader = checkNotNull(fileReader);
+    DirSentenceIterator(IoService ioService, File dir) {
+        this.ioService = checkNotNull(ioService);
         this.dir = checkNotNull(dir);
         checkArgument(dir.exists());
         checkArgument(dir.isDirectory());
@@ -29,14 +29,14 @@ class DirSentenceIterator implements SentenceIterator {
     }
 
     private void initIterator() {
-        iterator = fileReader.findAllFilesInDir(dir).collect(Collectors.toSet()).iterator();
+        iterator = ioService.findAllFilesInDir(dir).collect(Collectors.toSet()).iterator();
     }
 
     @Override
     public String nextSentence() {
         checkArgument(hasNext(), "Iterator does not have next elem!");
         final Path toRead = iterator.next();
-        final Optional<Stream<String>> stringStream = fileReader.readFile(toRead);
+        final Optional<Stream<String>> stringStream = ioService.readFile(toRead);
         if (!stringStream.isPresent()) {
             return nextSentence();
         } else {

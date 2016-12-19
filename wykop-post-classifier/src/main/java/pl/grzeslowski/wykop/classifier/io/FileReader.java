@@ -11,7 +11,6 @@ import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,7 +19,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 
 @Service
-public class FileReader {
+class FileReader implements IoService {
     private static final Logger log = LoggerFactory.getLogger(FileReader.class);
     private final List<Charset> charsets = Stream.of("UTF-8", "Windows-1250", "ISO-8859-1", "ISO-8859-2", "US-ASCII")
             .map(Charset::forName)

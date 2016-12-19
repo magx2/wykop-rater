@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import pl.grzeslowski.wykop.classifier.io.FileReader;
+import pl.grzeslowski.wykop.classifier.io.IoService;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,23 +40,23 @@ class Word2vecConfiguration {
     private int windowsSize;
 
     @Bean
-    Word2Vec word2Vec(FileReader fileReader) {
+    Word2Vec word2Vec(IoService ioService) {
         final Optional<Word2Vec> word2Vec = loadModel();
         if(word2Vec.isPresent()) {
             log.info("Loaded saved word2vec model");
             return word2Vec.get();
         } else {
             try {
-                return computeModelAndSave(fileReader);
+                return computeModelAndSave(ioService);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
         }
     }
 
-    private Word2Vec computeModelAndSave(FileReader fileReader) throws IOException {
+    private Word2Vec computeModelAndSave(IoService ioService) throws IOException {
         log.info("Computing word2vec");
-        SentenceIterator iterator = new DirSentenceIterator(fileReader, postsDir);
+        SentenceIterator iterator = new DirSentenceIterator(ioService, postsDir);
         TokenizerFactory tokenizerFactory = new DefaultTokenizerFactory();
         tokenizerFactory.setTokenPreProcessor(new CommonPreprocessor());
 
