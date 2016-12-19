@@ -25,6 +25,10 @@ repositories {
 	mavenCentral()
 }
 
+configurations {
+	all*.exclude group: 'org.bytedeco', module: 'javacpp-presets'
+}
+
 ext {
 	dl4jVersion = '0.7.1'
 }
