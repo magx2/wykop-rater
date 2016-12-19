@@ -1,0 +1,12 @@
+seed: 1337
+word2vec:
+  hyper:
+    minWordFrequency: 5
+    iterations: 1
+    layerSize: 300
+    windowsSize: 5
+  models:
+    pathToModel: 'D:\Programowanie\deep_learning\wykop\wykop-post-clasifier/word2vec.bin'
+    pathToWordVectors: 'D:\Programowanie\deep_learning\wykop\wykop-post-clasifier/wordVectors.txt'
+wykop:
+  postsDir: 'D:\Programowanie\deep_learning\wykop\posts'
