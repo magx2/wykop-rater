@@ -16,20 +16,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 class DirSentenceIterator implements SentenceIterator {
     private final IoService ioService;
-    private final File dir;
     private Iterator<Path> iterator;
     private SentencePreProcessor preProcessor;
 
-    DirSentenceIterator(IoService ioService, File dir) {
+    DirSentenceIterator(IoService ioService) {
         this.ioService = checkNotNull(ioService);
-        this.dir = checkNotNull(dir);
-        checkArgument(dir.exists());
-        checkArgument(dir.isDirectory());
         initIterator();
     }
 
     private void initIterator() {
-        iterator = ioService.findAllFilesInDir(dir).collect(Collectors.toSet()).iterator();
+        iterator = ioService.findAllPostsFiles().collect(Collectors.toSet()).iterator();
     }
 
     @Override

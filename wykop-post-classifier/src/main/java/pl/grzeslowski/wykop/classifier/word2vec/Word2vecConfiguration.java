@@ -56,7 +56,7 @@ class Word2vecConfiguration {
 
     private Word2Vec computeModelAndSave(IoService ioService) throws IOException {
         log.info("Computing word2vec");
-        SentenceIterator iterator = new DirSentenceIterator(ioService, postsDir);
+        SentenceIterator iterator = new DirSentenceIterator(ioService);
         TokenizerFactory tokenizerFactory = new DefaultTokenizerFactory();
         tokenizerFactory.setTokenPreProcessor(new CommonPreprocessor());
 

@@ -26,7 +26,7 @@ class FileReader implements IoService {
             .collect(toList());
 
     @Value("${wykop.postsDir}")
-    private String postsDir;
+    private File postsDir;
 
     private Stream<String> readFile(Path path, Charset charset) {
         try (Stream<String> stream = Files.lines(path, charset)) {
@@ -34,6 +34,11 @@ class FileReader implements IoService {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    @Override
+    public Stream<Path> findAllPostsFiles() {
+        return findAllFilesInDir(postsDir);
     }
 
     public Optional<Stream<String>> readFile(Path path) {
