@@ -69,7 +69,7 @@ class FileReader implements IoService {
                 .findFirst();
     }
 
-    private Stream<Path> findAllFilesInDir(File dir) {
+    Stream<Path> findAllFilesInDir(File dir) {
         try {
             return Files.walk(dir.toPath())
                     .filter(file -> Files.isRegularFile(file));

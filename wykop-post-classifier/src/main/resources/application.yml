@@ -25,7 +25,10 @@ rnn:
   layers:
     l0:
       nout: 200
-  pathToSaveModel: 'D:\Programowanie\deep_learning\wykop\wykop-post-clasifier/rnn-model.bin'
 iterationListener:
   fileStatsStorage: 'D:\Programowanie\deep_learning\wykop\wykop-post-clasifier\data\ui_service.bin'
   printIterations: 1
+fileMultiLayerNetwork:
+  dirToSave: 'D:\Programowanie\deep_learning\wykop\wykop-post-clasifier/rnn-models/rnn-model.bin'
+  modelPrefix: 'rnn-'
+  modelSuffix: '.bin'

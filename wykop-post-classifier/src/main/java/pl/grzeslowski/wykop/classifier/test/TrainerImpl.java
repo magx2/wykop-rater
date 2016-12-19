@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.grzeslowski.wykop.classifier.data.DataProvider;
+import pl.grzeslowski.wykop.classifier.io.MultiLayerNetworkSaver;
 
 import javax.inject.Provider;
 
@@ -19,6 +20,7 @@ class TrainerImpl implements Trainer {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(TrainerImpl.class);
 
     private final Provider<MultiLayerNetwork> modelProvider;
+    private MultiLayerNetworkSaver networkSaver;
     private final DataProvider dataProvider;
     private IterationListener[] iterationListenerList;
 
@@ -32,9 +34,12 @@ class TrainerImpl implements Trainer {
     private int layerSize;
 
     @Autowired
-    public TrainerImpl(Provider<MultiLayerNetwork> modelProvider, DataProvider dataProvider,
+    public TrainerImpl(Provider<MultiLayerNetwork> modelProvider,
+                       MultiLayerNetworkSaver networkSaver,
+                       DataProvider dataProvider,
                        IterationListener[] iterationListenerList) {
         this.modelProvider = modelProvider;
+        this.networkSaver = networkSaver;
         this.dataProvider = dataProvider;
         this.iterationListenerList = iterationListenerList;
     }
@@ -54,8 +59,8 @@ class TrainerImpl implements Trainer {
             log.info("Starting learning, epoch {}", epoch);
             net.fit(train);
 
-//            log.info("Saving model");
-//            neuralNetworkSaver.save(net);
+            log.info("Saving model");
+            networkSaver.save(net);
 
             log.info("Starting evaluation:");
 
