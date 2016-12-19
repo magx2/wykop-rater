@@ -14,6 +14,9 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+
+import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 @Configuration
 class RnnConfiguration {
@@ -35,6 +38,7 @@ class RnnConfiguration {
     private int layerSize;
 
     @Bean
+    @Scope(SCOPE_PROTOTYPE)
     MultiLayerNetwork model() {
         log.info("Creating new RNN model...");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
@@ -59,7 +63,7 @@ class RnnConfiguration {
                         .activation("softmax")
                         .lossFunction(LossFunctions.LossFunction.MCXENT)
                         .nIn(100)
-                        .nOut(layerSize)
+                        .nOut(3)
                         .build())
                 .pretrain(false).backprop(true).build();
 

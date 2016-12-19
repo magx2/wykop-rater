@@ -3,7 +3,7 @@ word2vec:
   hyper:
     minWordFrequency: 5
     iterations: 1
-    layerSize: 300
+    layerSize: 100
     windowsSize: 5
   models:
     pathToModel: 'D:\Programowanie\deep_learning\wykop\wykop-post-clasifier/word2vec.bin'
@@ -12,7 +12,7 @@ wykop:
   postsDir: 'D:\Programowanie\deep_learning\wykop\posts'
 test:
   batchSize: 50
-  maxWordsInPost: 50
+  maxWordsInPost: 250
   epochs: 999999999
 rnn:
   iterations: 1
@@ -26,3 +26,6 @@ rnn:
     l0:
       nout: 200
   pathToSaveModel: 'D:\Programowanie\deep_learning\wykop\wykop-post-clasifier/rnn-model.bin'
+iterationListener:
+  fileStatsStorage: 'D:\Programowanie\deep_learning\wykop\wykop-post-clasifier\data\ui_service.bin'
+  printIterations: 1
