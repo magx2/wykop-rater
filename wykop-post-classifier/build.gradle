@@ -25,8 +25,20 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	dl4jVersion = '0.7.1'
+}
 
+//noinspection GroovyAssignabilityCheck
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
+
+	// DL4j
+	compile 'org.deeplearning4j:deeplearning4j-core:' + dl4jVersion
+	compile 'org.deeplearning4j:deeplearning4j-nlp:' + dl4jVersion
+	compile 'org.nd4j:nd4j-native:' + dl4jVersion
+	compile 'org.nd4j:nd4j-native:' + dl4jVersion + ":windows-x86_64"
+	compile 'org.deeplearning4j:deeplearning4j-ui_2.10:' + dl4jVersion
+
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
