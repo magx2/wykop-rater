@@ -16,17 +16,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 class DirSentenceIterator implements SentenceIterator {
     private final FileReader fileReader;
-    private final String dir;
+    private final File dir;
     private Iterator<Path> iterator;
     private SentencePreProcessor preProcessor;
 
-    DirSentenceIterator(FileReader fileReader, String dir) {
+    DirSentenceIterator(FileReader fileReader, File dir) {
         this.fileReader = checkNotNull(fileReader);
         this.dir = checkNotNull(dir);
-        checkArgument(!dir.isEmpty());
-        final File file = new File(dir);
-        checkArgument(file.exists());
-        checkArgument(file.isDirectory());
+        checkArgument(dir.exists());
+        checkArgument(dir.isDirectory());
         initIterator();
     }
 

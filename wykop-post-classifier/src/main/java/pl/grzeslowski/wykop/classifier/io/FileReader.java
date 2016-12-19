@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
@@ -50,9 +51,9 @@ public class FileReader {
                 .findFirst();
     }
 
-    public Stream<Path> findAllFilesInDir(String dir) {
+    public Stream<Path> findAllFilesInDir(File dir) {
         try {
-            return Files.walk(Paths.get(dir))
+            return Files.walk(dir.toPath())
                     .filter(file -> Files.isRegularFile(file));
         } catch (IOException e) {
             throw new UncheckedIOException(e);

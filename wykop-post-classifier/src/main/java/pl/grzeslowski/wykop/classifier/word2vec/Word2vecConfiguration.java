@@ -25,7 +25,7 @@ class Word2vecConfiguration {
     @Value("${seed}")
     private int seed;
     @Value("${wykop.postsDir}")
-    private String postsDir;
+    private File postsDir;
     @Value("${word2vec.models.pathToModel}")
     private File pathToModel;
     @Value("${word2vec.models.pathToWordVectors}")
