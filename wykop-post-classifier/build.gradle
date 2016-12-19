@@ -47,3 +47,7 @@ dependencies {
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+task testLearningRates(type:Exec, dependsOn: 'build') {
+	commandLine 'bin/test-learning-rates.bat'
+}

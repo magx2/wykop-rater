@@ -59,6 +59,19 @@ class TrainerImpl implements Trainer {
 
     @Override
     public MultiLayerNetwork trainAndTest() {
+        log.info("Starting training & testing.\n" +
+                        "Params:\n" +
+                        "\titerations: {},\n" +
+                        "\tregularization: {},\n" +
+                        "\tlearningRate: {},\n" +
+                        "\tl2: {},\n" +
+                        "\tgradientNormalizationThreshold: {}",
+                rnnProperties.getIterations(),
+                rnnProperties.isRegularization(),
+                rnnProperties.getLearningRate(),
+                rnnProperties.getL2(),
+                rnnProperties.getGradientNormalizationThreshold());
+
         final MultiLayerNetwork net = modelProvider.get();
 
         log.info("Initializing model");
