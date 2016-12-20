@@ -25,9 +25,9 @@ class JsonEpochResultSaver implements EpochResultSaver {
 
     @Autowired
     JsonEpochResultSaver(ObjectMapper objectMapper,
-                         @Value("${fileMultiLayerNetwork.dirToSave}") File dirToSave,
-                         @Value("${fileMultiLayerNetwork.modelPrefix}") String modelPrefix,
-                         @Value("${fileMultiLayerNetwork.modelSuffix}") String modelSuffix) {
+                         @Value("${jsonEpochResultSaver.dirToSave}") File dirToSave,
+                         @Value("${jsonEpochResultSaver.modelPrefix}") String modelPrefix,
+                         @Value("${jsonEpochResultSaver.modelSuffix}") String modelSuffix) {
         this.objectMapper = objectMapper;
         this.dirToSave = dirToSave;
         checkArgument(dirToSave.exists());
