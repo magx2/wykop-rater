@@ -42,7 +42,7 @@ class JsonEpochResultSaver implements EpochResultSaver {
         File epochFile = createModelFile(fileName);
         try {
             log.info("Saving epoch#{} {}", epochResult.getEpoch(), epochFile.getAbsoluteFile());
-            objectMapper.writeValue(epochFile, epochResult);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(epochFile, epochResult);
             return epochFile;
         } catch (IOException e) {
             throw new UncheckedIOException("Cannot save epoch to file " + fileName + "!", e);
