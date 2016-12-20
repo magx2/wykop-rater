@@ -13,7 +13,7 @@ wykop:
 test:
   batchSize: 200
   maxWordsInPost: 300
-  epochs: 999999999
+  epochs: 30
   suppressWarnings: true
 rnn:
   iterations: 1
