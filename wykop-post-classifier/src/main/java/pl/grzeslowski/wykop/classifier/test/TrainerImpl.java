@@ -17,7 +17,10 @@ import pl.grzeslowski.wykop.classifier.rnn.RnnProperties;
 
 import javax.inject.Provider;
 import java.io.File;
+import java.util.Optional;
 import java.util.stream.IntStream;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 @Service
 class TrainerImpl implements Trainer {
@@ -80,36 +83,45 @@ class TrainerImpl implements Trainer {
 
         IntStream.range(1, epochs + 1)
                 .mapToObj(epoch -> trainAndTestEpoch(net, epoch))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .reduce((a, b) -> b)
                 .ifPresent(epochResultSaver::save);
 
         return net;
     }
 
-    private EpochResult trainAndTestEpoch(MultiLayerNetwork net, int epoch) {
+    private Optional<EpochResult> trainAndTestEpoch(MultiLayerNetwork net, int epoch) {
         final DataSetIterator train = dataProvider.newTrainData();
         final DataSetIterator test = dataProvider.newTestData();
 
         log.info("Starting learning, epoch {}", epoch);
+        checkArgument(train.hasNext(), "Train set does not have elements!");
         net.fit(train);
 
         final File modelFile = networkSaver.save(net);
 
         log.info("Starting evaluation:");
 
-        Evaluation evaluation = new Evaluation();
-        while (test.hasNext()) {
-            DataSet t = test.next();
-            INDArray features = t.getFeatures();
-            INDArray labels = t.getLabels();
-            INDArray inMask = t.getFeaturesMaskArray();
-            INDArray outMask = t.getLabelsMaskArray();
-            INDArray predicted = net.output(features, false, inMask, outMask);
+        if (test.hasNext()) {
+            Evaluation evaluation = new Evaluation();
+            while (test.hasNext()) {
+                DataSet t = test.next();
+                INDArray features = t.getFeatures();
+                INDArray labels = t.getLabels();
+                INDArray inMask = t.getFeaturesMaskArray();
+                INDArray outMask = t.getLabelsMaskArray();
+                INDArray predicted = net.output(features, false, inMask, outMask);
 
-            evaluation.evalTimeSeries(labels, predicted, outMask);
+                evaluation.evalTimeSeries(labels, predicted, outMask);
+            }
+            log.info("Evaluation output:\n{}", evaluation.stats(suppressWarnings));
+            return Optional.of(
+                    new EpochResult(epoch, new TestOutput(evaluation), rnnProperties, modelFile)
+            );
+        } else {
+            log.info("There is no test data");
+            return Optional.empty();
         }
-        log.info("Evaluation output:\n{}", evaluation.stats(suppressWarnings));
-
-        return new EpochResult(epoch, new TestOutput(evaluation), rnnProperties, modelFile);
     }
 }
