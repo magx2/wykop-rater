@@ -119,7 +119,7 @@ class PostDataSetIterator implements DataSetIterator {
     private PostVectorizedContent words2vectors(Post post) {
         final List<INDArray> vectorizedContent = stream(post.getContent().split("\\s")) // on white char
                 .filter(word2Vec::hasWord)
-                .map(word2Vec::getWordVectorMatrix)
+                .map(word2Vec::getWordVectorMatrixNormalized)
                 .collect(Collectors.toList());
         return new PostVectorizedContent(post, vectorizedContent);
     }
@@ -178,12 +178,12 @@ class PostDataSetIterator implements DataSetIterator {
     }
 
     @Override
-    public void setPreProcessor(DataSetPreProcessor preProcessor) {
+    public DataSetPreProcessor getPreProcessor() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public DataSetPreProcessor getPreProcessor() {
+    public void setPreProcessor(DataSetPreProcessor preProcessor) {
         throw new UnsupportedOperationException();
     }
 
