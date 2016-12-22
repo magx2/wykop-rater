@@ -40,6 +40,8 @@ class RnnConfiguration {
     @Bean
     @Scope(SCOPE_PROTOTYPE)
     MultiLayerNetwork model() {
+        int layer = 0;
+
         log.info("Creating new RNN model...");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
@@ -51,20 +53,10 @@ class RnnConfiguration {
                 .gradientNormalizationThreshold(gradientNormalizationThreshold)
                 .learningRate(learningRate)
                 .list()
-                .layer(0, new GravesLSTM.Builder()
-                        .nIn(layerSize)
-                        .nOut(200)
+                .layer(layer++, new GravesLSTM.Builder().nIn(layerSize).nOut(200)
                         .activation("softsign").build())
-                .layer(1, new GravesLSTM.Builder()
-                        .nIn(200)
-                        .nOut(100)
-                        .activation("softsign").build())
-                .layer(2, new RnnOutputLayer.Builder()
-                        .activation("softmax")
-                        .lossFunction(LossFunctions.LossFunction.MCXENT)
-                        .nIn(100)
-                        .nOut(3)
-                        .build())
+                .layer(layer, new RnnOutputLayer.Builder().activation("softmax")
+                        .lossFunction(LossFunctions.LossFunction.MCXENT).nIn(200).nOut(3).build())
                 .pretrain(false).backprop(true).build();
 
         return new MultiLayerNetwork(conf);
